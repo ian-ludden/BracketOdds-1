@@ -31,11 +31,18 @@ if __name__ == '__main__':
     # TODO: Add command-line arguments for 
     # how many brackets per pool and 
     # how many pools to fetch. 
-    brackets_per_pool = 2 #10000
-    num_pools = 1 #100
+    brackets_per_pool = 100000
+    num_pools = 10
 
     for type in ["men"]:
         for sfn in [None, "f4a", "e8"]:
             for pool_index in range(num_pools):
-                for bracket_index in range(brackets_per_pool):
-                    print(fetch_bracket(type=type, sfn=sfn))
+                filename = "bracket_pools/prefix0_bracket_pool_{0:02d}.txt".format(pool_index)
+                with open(filename, 'w') as out_f:
+                    for bracket_index in range(brackets_per_pool):
+                        bitstring = fetch_bracket(type=type, sfn=sfn)
+                        prefix0_bitstring = "0" + bitstring
+                        integer_val = int(prefix0_bitstring, 2)
+                        out_f.write("{:016X}\n".format(integer_val))
+
+                    

@@ -35,14 +35,16 @@ if __name__ == '__main__':
     num_pools = 10
 
     for type in ["men"]:
+        print(type)
         for sfn in [None, "f4a", "e8"]:
+            print(sfn)
             for pool_index in range(num_pools):
-                filename = "bracket_pools/prefix0_bracket_pool_{0:02d}.txt".format(pool_index)
+                filename = "bracket_pools/prefix0_bracket_pool_{0}_{1}_{2:02d}.txt".format(type, sfn if sfn else "default", pool_index)
                 with open(filename, 'w') as out_f:
                     for bracket_index in range(brackets_per_pool):
                         bitstring = fetch_bracket(type=type, sfn=sfn)
                         prefix0_bitstring = "0" + bitstring
                         integer_val = int(prefix0_bitstring, 2)
                         out_f.write("{:016X}\n".format(integer_val))
-
+        print()
                     

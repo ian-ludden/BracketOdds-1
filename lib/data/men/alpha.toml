@@ -1,21 +1,21 @@
-title = "men alpha values-2021"
+title = "men alpha values-2024"
 
-# Stores the default alpha values for each round
+# Stores the default (i.e., weighted average) alpha values for each round
 [default_alpha]
-1 = 0.977
-2 = 1.083
-3 = 0.886
-4 = 0.139
-5 = 0.687
-6 = 1.229
+1 = 0.930
+2 = 1.069
+3 = 0.908
+4 = 0.107
+5 = 0.728
+6 = 1.282
 
-# Stores the alpha values for the higher seed of each matchup in the first round.
+# Stores alpha values for the higher seed of each matchup in the first round.
 [r1_alpha]
-1 = 1.79
-2 = 1.34
-3 = 1.11
-4 = 1.10
-5 = 0.69
-6 = 0.84
-7 = 1.19
+1 = 1.56
+2 = 1.27
+3 = 1.15
+4 = 1.12
+5 = 0.71
+6 = 0.80
+7 = 1.28
 8 = 0.00

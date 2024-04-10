@@ -1,8 +1,8 @@
 from lib.bracket import Bracket, BracketType
 from lib.bracket.sample import F4_A, E_8
 
-perfect_bitstring = "011010000000000101101010010010000111111101000001110101111001101"
-
+# perfect_bitstring = "011010000000000101101010010010000111111101000001110101111001101" # 2022
+perfect_bitstring = "000100011100000000000000010010100001111011110011100010110000001"
 
 def hex_to_bitstring(hex_string):
     integer_val = int(hex_string, 16)
@@ -101,6 +101,6 @@ if __name__ == '__main__':
                         hexstring = in_f.readline()
                         bitstring = hex_to_bitstring(hexstring)[:-1]
                         score = score_bitstring_directly(bitstring)
-                        if score >= 1200:
+                        if score >= 1460: # ESPN cutoff, or some other reasonable threshold
                             print("{},{}".format(score, bitstring))
         print()

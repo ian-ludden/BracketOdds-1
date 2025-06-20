@@ -1,2 +1,12 @@
-bitstring = "000000000000000000000000000000000000000000000000000000000000000" #Ignore the last bit when entering results into the bitstring
+bitstring = "010110000110000000001000011011100011010100110101001001100001000" #Ignore the last bit when entering results into the bitstring
 round = 0
+
+bitstring_details = [
+    "01011000011000000000100001101110",
+    "0011010100110101",
+    "00100110",
+    "0001",
+    "00",
+    "0"
+]
+last_updated_round = 6

@@ -1,17 +1,27 @@
+import pandas as pd
+
 from lib.bracket import Bracket, BracketType
 from lib.bracket.sample import F4_A, E_8
 
 # perfect_bitstring = "011010000000000101101010010010000111111101000001110101111001101" # 2022
-perfect_bitstring = "000100011100000000000000010010100001111011110011100010110000001"
+# perfect_bitstring = "000100011100000000000000010010100001111011110011100010110000001" # 2023
+# perfect_bitstring = "010110000110000000001000011011100011010100110101001001100001000" # 2024
+perfect_bitstring = "0100001000101010001000000100000000010110011101010100010100001000" # 2025
+women_perfect_bitstring = "0000000001000010000000000100001000110011001101110001010101001100" # 2025
 
 def hex_to_bitstring(hex_string):
     integer_val = int(hex_string, 16)
     return "{:064b}".format(integer_val)
 
 
-def score_bitstring_directly(bitstring):
+def score_bitstring_directly(bitstring, type="men"):
     b = [int(bit) for bit in bitstring]
-    p = [int(bit) for bit in perfect_bitstring]
+
+    if type == "men":
+        p = [int(bit) for bit in perfect_bitstring]
+    else:
+        p = [int(bit) for bit in women_perfect_bitstring]
+
     current_round = 6
     current_idx = 0
     gamesCorrectList = [0] * 6
@@ -79,6 +89,38 @@ def score_bitstring(bitstring, bracket_type):
 
 
 if __name__ == '__main__':
+    web_only = True
+    web_fname = "2025_BracketOddsExport.csv" # "2025_BracketOddsExport.csv"
+
+
+    ###### FOR SCORING BRACKETODDS.CS.ILLINOIS.EDU BRACKETS ###### 
+    # Read and preview
+    df = pd.read_csv(web_fname, index_col="id", dtype={"bitstring": str, "sfn": str, "type": str}, na_filter=False)
+    print()
+    print("Total # brackets:", len(df), "\n")
+    print("Distribution:")
+    type_counts = df["type"].value_counts()
+    for type in type_counts.index: 
+        print("    ", type, ": ", type_counts[type], sep="")
+    print()
+
+    
+    # Trim extra bit from end of bitstrings
+    df["bitstring"] = df["bitstring"].apply(lambda x: x[:-1])
+    print(df.head(10))
+
+    # Apply scoring function
+    df["score"] = df.apply(lambda x: score_bitstring_directly(x["bitstring"], x["type"]), axis=1)
+    df.sort_values(by="score", ascending=False, inplace=True)
+
+    # Preview and save
+    print(df.head(10))
+    df.to_csv(web_fname.replace(".csv", "_SCORED.csv"))
+
+    if web_only:
+        exit()
+
+    ###### FOR SCORING LOCALLY GENERATED BRACKET POOLS ######
     # TODO: Add command-line arguments for 
     # how many brackets per pool and 
     # how many pools. 
@@ -101,6 +143,8 @@ if __name__ == '__main__':
                         hexstring = in_f.readline()
                         bitstring = hex_to_bitstring(hexstring)[:-1]
                         score = score_bitstring_directly(bitstring)
-                        if score >= 1460: # ESPN cutoff, or some other reasonable threshold
+                        if score >= 1640: # ESPN cutoff, or some other reasonable threshold
                             print("{},{}".format(score, bitstring))
         print()
+
+    # TODO: Add scoring for women's tournament brackets

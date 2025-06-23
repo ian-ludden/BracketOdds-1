@@ -92,6 +92,11 @@ if __name__ == '__main__':
     web_only = True
     web_fname = "2025_BracketOddsExport.csv" # "2025_BracketOddsExport.csv"
 
+    # Make sure all columns are included when printing dataframes
+    pd.set_option('display.max_columns', None)
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.width', None)
+
 
     ###### FOR SCORING BRACKETODDS.CS.ILLINOIS.EDU BRACKETS ###### 
     # Read and preview
@@ -107,13 +112,14 @@ if __name__ == '__main__':
     
     # Trim extra bit from end of bitstrings
     df["bitstring"] = df["bitstring"].apply(lambda x: x[:-1])
-    print(df.head(10))
+    # print(df.head(10))
 
     # Apply scoring function
     df["score"] = df.apply(lambda x: score_bitstring_directly(x["bitstring"], x["type"]), axis=1)
     df.sort_values(by="score", ascending=False, inplace=True)
 
     # Preview and save
+    print("*** Top scoring brackets ***")
     print(df.head(10))
     df.to_csv(web_fname.replace(".csv", "_SCORED.csv"))
 

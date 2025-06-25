@@ -89,7 +89,7 @@ def score_bitstring(bitstring, bracket_type):
 
 
 if __name__ == '__main__':
-    web_only = True
+    web_only = False
     web_fname = "2025_BracketOddsExport.csv" # "2025_BracketOddsExport.csv"
 
     # Make sure all columns are included when printing dataframes
@@ -123,6 +123,12 @@ if __name__ == '__main__':
     print(df.head(10))
     df.to_csv(web_fname.replace(".csv", "_SCORED.csv"))
 
+    print("\n*** Top scoring brackets for each gender (type) and model (sfn) ***")
+    dfr = df.reset_index()
+    dfg = dfr.loc[dfr.groupby(["sfn","type"])['score'].idxmax()]
+    dfg.set_index("id", inplace=True)
+    print(dfg)
+
     if web_only:
         exit()
 
@@ -133,11 +139,13 @@ if __name__ == '__main__':
     brackets_per_pool = 100000
     num_pools = 10
 
-    for type in ["men"]:
-        bracket_type = BracketType.MEN
+    for type in ["men", "women"]:
+        # bracket_type = BracketType.MEN
         print(type)
         
-        for sfn_name in [None, "f4a", "e8"]:
+        sfns = [None, "f4a", "e8"] if type == "men" else [None]
+
+        for sfn_name in sfns:
             print(sfn_name)
             
             for pool_index in range(num_pools):
@@ -148,9 +156,8 @@ if __name__ == '__main__':
                         #     print("index =", bracket_index // 10000)
                         hexstring = in_f.readline()
                         bitstring = hex_to_bitstring(hexstring)[:-1]
-                        score = score_bitstring_directly(bitstring)
-                        if score >= 1640: # ESPN cutoff, or some other reasonable threshold
+                        score = score_bitstring_directly(bitstring, type=type)
+                        if score >= 1700: # ESPN cutoff, or some other reasonable threshold
                             print("{},{}".format(score, bitstring))
         print()
-
-    # TODO: Add scoring for women's tournament brackets
+ 
